@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Comment({ comment, hat, callback }) {
-  const { data } = comment;
+  const { data, recordId } = comment;
   const { date, value } = data;
 
   const updateComment = async (event) => {
@@ -10,6 +10,15 @@ export default function Comment({ comment, hat, callback }) {
     await hat.hatData().update([comment]);
     callback(comment)
   };
+
+  const deleteComment = async (event) => {
+    event.preventDefault();
+    const response = await hat.hatData().delete([recordId]);
+
+    if (response.parsedBody) {
+      callback(comment)
+    }
+  }
 
   return (
     <div key={date} className="comment">
@@ -22,7 +31,7 @@ export default function Comment({ comment, hat, callback }) {
           <a href="" className="edit" onClick={updateComment}>
             Edit
           </a>
-          <a href="" className="delete">
+          <a href="" className="delete" onClick={deleteComment}>
             Delete
           </a>
         </div>
